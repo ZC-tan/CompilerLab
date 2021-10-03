@@ -3,5 +3,5 @@
 image = { source = "dockerfile", path = ".", tag = "test-submit" }
 
 run = [
-  "java test $input",
+  "java Main $input",
 ]
