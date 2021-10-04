@@ -214,6 +214,17 @@ public class Main {
         else if(isNum(word)){
             System.out.println("Number("+word+")");
         }
+        else if(Character.isDigit(word.charAt(0))){
+            int c=0;
+            for(c=0;c<word.length();c++){
+                if(!Character.isDigit(word.charAt(c))){
+                    break;
+                }
+            }
+
+            System.out.println("Number("+word.substring(0,c)+")");
+            System.out.println("Ident("+word.substring(c)+")");
+        }
         else {
             System.out.println("Err");
             System.exit(0);
@@ -263,6 +274,7 @@ public class Main {
                         }
                         c=0;
                     }
+
                     else c++;
                 }
 //                for(int j=0;j< words.length;j++){
