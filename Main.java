@@ -221,8 +221,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        //file = new File(args[0]);
-        file = new File("abc.txt");
+        file = new File(args[0]);
+//        file = new File("abc.txt");
         br = new BufferedReader(new FileReader(file));
         while((line = br.readLine())!=null){
             wordsBySpace = line.trim().split("\\s+");
