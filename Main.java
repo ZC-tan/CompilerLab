@@ -97,6 +97,7 @@ public class Main {
         }
         else {
             System.out.println("Err");
+            System.exit(0);
         }
     }
 
