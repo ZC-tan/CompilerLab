@@ -1,16 +1,20 @@
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner in = new Scanner(System.in);
+//        File myObj = new File("filename.txt");
+//        Scanner in = new Scanner(myObj);
         String input = in.nextLine();
         while(in.hasNextLine()){
             input+=in.nextLine();
+            input+="\n";
         }
-
         CharStream inputStream = CharStreams.fromString(input);
 
         minisysyLexer lexer = new minisysyLexer(inputStream);
