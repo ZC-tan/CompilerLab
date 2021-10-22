@@ -42,7 +42,22 @@ public class Visitor extends minisysyBaseVisitor<Void>{
     @Override
     public Void visitStmt(minisysyParser.StmtContext ctx) {
         toPrint = "    ret i32 ";
-        toPrint += ctx.NUMBER().getText();
+
+        String num = ctx.NUMBER().getText();
+        if(num.startsWith("0x")){
+            int hex = Integer.parseInt(num.substring(2),16);
+            toPrint += hex;
+        }
+        else if(num.startsWith("0")){
+            int oct = Integer.parseInt(num.substring(1),8);
+            toPrint += oct;
+        }
+        else{
+            toPrint += ctx.NUMBER().getText();
+        }
+
+
+
         System.out.println(toPrint);
         System.out.print("}");
         toPrint="";
