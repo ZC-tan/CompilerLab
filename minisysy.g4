@@ -1,11 +1,11 @@
 grammar minisysy;
 
-compUnit: funcDef;catch[RecognitionException e] { throw e; }finally{}
-funcDef: funcType  ident  '('  ')'  block;catch[RecognitionException e] { throw e; }finally{}
-funcType: 'int';catch[RecognitionException e] { throw e; }finally{}
-ident: 'main';catch[RecognitionException e] { throw e; }finally{}
-block: '{'  stmt  '}';catch[RecognitionException e] { throw e; }finally{}
-stmt: 'return' NUMBER ';';catch[RecognitionException e] { throw e; }finally{}
+compUnit: funcDef;//catch[RecognitionException e] { throw e; }finally{}
+funcDef: funcType  ident  '('  ')'  block;//catch[RecognitionException e] { throw e; }finally{}
+funcType: 'int';//catch[RecognitionException e] { throw e; }finally{}
+ident: 'main';//catch[RecognitionException e] { throw e; }finally{}
+block: '{'  stmt  '}';//catch[RecognitionException e] { throw e; }finally{}
+stmt: 'return' NUMBER ';';//catch[RecognitionException e] { throw e; }finally{}
 
 fragment HEXADECIMALPREFIX : '0x' | '0X';
 fragment NONZERODIGIT      : '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';

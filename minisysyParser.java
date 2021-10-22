@@ -125,8 +125,10 @@ public class minisysyParser extends Parser {
 			funcDef();
 			}
 		}
-		catch (RecognitionException e) {
-			 throw e; 
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
 		}
 		finally {
 			exitRule();
@@ -181,8 +183,10 @@ public class minisysyParser extends Parser {
 			block();
 			}
 		}
-		catch (RecognitionException e) {
-			 throw e; 
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
 		}
 		finally {
 			exitRule();
@@ -220,8 +224,10 @@ public class minisysyParser extends Parser {
 			match(T__2);
 			}
 		}
-		catch (RecognitionException e) {
-			 throw e; 
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
 		}
 		finally {
 			exitRule();
@@ -259,8 +265,10 @@ public class minisysyParser extends Parser {
 			match(T__3);
 			}
 		}
-		catch (RecognitionException e) {
-			 throw e; 
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
 		}
 		finally {
 			exitRule();
@@ -305,8 +313,10 @@ public class minisysyParser extends Parser {
 			match(T__5);
 			}
 		}
-		catch (RecognitionException e) {
-			 throw e; 
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
 		}
 		finally {
 			exitRule();
@@ -349,8 +359,10 @@ public class minisysyParser extends Parser {
 			match(T__7);
 			}
 		}
-		catch (RecognitionException e) {
-			 throw e; 
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
 		}
 		finally {
 			exitRule();
