@@ -10,11 +10,12 @@ public class Main {
         Scanner in = new Scanner(System.in);
 //        File myObj = new File("filename.txt");
 //        Scanner in = new Scanner(myObj);
-        String input = in.nextLine();
+        String input = in.nextLine() + "\n";
         while(in.hasNextLine()){
             input+=in.nextLine();
             input+="\n";
         }
+//        System.out.println(input);
         CharStream inputStream = CharStreams.fromString(input);
 
         minisysyLexer lexer = new minisysyLexer(inputStream);
