@@ -73,7 +73,7 @@ public class Calculator {
             if(isOp(exp.substring(i,i+1))){
                 ExpToken.add(exp.charAt(i)+"");
             }
-            while(i<exp.length() && Character.isDigit(exp.charAt(i))){
+            while(i<exp.length() && (Character.isDigit(exp.charAt(i))|| Character.isLetter(exp.charAt(i)))){
                 num.append(exp.charAt(i));
                 i++;
             }
@@ -174,7 +174,7 @@ public class Calculator {
                     num = false;
                 }
             }
-            else if(!Character.isDigit(x.charAt(i))){
+            else if(!Character.isDigit(x.charAt(i)) && !Character.isLetter(x.charAt(i))){
                 num = false;
             }
         }
@@ -215,12 +215,13 @@ public class Calculator {
     }
 
 
-//    public static void main(String[] args) {
-//
-//        Calculator c = new Calculator("1+(-2)*(3/(4-5))");
-////        input = "1+-+(---------1)";
-//        System.out.println(c.calc());
-//    }
+    public static void main(String[] args) {
+//        System.out.println(toDec("0xF"));
+        Calculator c = new Calculator("------0xF+---2*010");
+//        c.splitExp(c.input);
+//        System.out.println(c.ExpToken);
+        System.out.println(c.calc());
+    }
 
 
 
