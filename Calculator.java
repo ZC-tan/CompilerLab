@@ -215,12 +215,12 @@ public class Calculator {
     }
 
 
-    public static void main(String[] args) {
-
-        Calculator c = new Calculator("1+(-2)*(3/(4-5))");
-//        input = "1+-+(---------1)";
-        System.out.println(c.calc());
-    }
+//    public static void main(String[] args) {
+//
+//        Calculator c = new Calculator("1+(-2)*(3/(4-5))");
+////        input = "1+-+(---------1)";
+//        System.out.println(c.calc());
+//    }
 
 
 
