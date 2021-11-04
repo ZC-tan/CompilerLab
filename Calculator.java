@@ -15,13 +15,28 @@ public class Calculator {
 
     public static int toDec(String num){
         int dec;
+        int hex;
+        int oct;
 
-        if(num.startsWith("0x") || num.startsWith("0X")){
-            int hex = Integer.parseInt(num.substring(2),16);
+        if(num.startsWith("-")){
+            if(num.startsWith("-0x")||num.startsWith("-0X")){
+                hex = Integer.parseInt(num.substring(3),16);
+                dec = hex*-1;
+            }
+            else if(num.startsWith("-0")){
+                oct = Integer.parseInt(num.substring(2),8);
+                dec = oct*-1;
+            }
+            else{
+                return Integer.parseInt(num);
+            }
+        }
+        else if(num.startsWith("0x") || num.startsWith("0X")){
+            hex = Integer.parseInt(num.substring(2),16);
             dec = hex;
         }
         else if(num.startsWith("0")){
-            int oct = Integer.parseInt(num.substring(1),8);
+            oct = Integer.parseInt(num.substring(1),8);
             dec = oct;
         }
         else{
@@ -216,10 +231,12 @@ public class Calculator {
 
 
     public static void main(String[] args) {
-//        System.out.println(toDec("0xF"));
-        Calculator c = new Calculator("------0xF+---2*010");
-//        c.splitExp(c.input);
+//       System.out.println(toDec("-0x10"));
+        Calculator c = new Calculator("-0x10--015");
+//        c.splitExp(c.symbolClear(c.input));
+//        c.toSuffix();
 //        System.out.println(c.ExpToken);
+//        System.out.println(c.SuffixExp);
         System.out.println(c.calc());
     }
 
