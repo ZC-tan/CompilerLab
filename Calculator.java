@@ -107,7 +107,7 @@ public class Calculator {
                     ExpToken.set(i+1,num.toString());
                     ExpToken.remove(i);
                 }
-                if((ExpToken.get(i+1).charAt(0))=='('){
+                else if((ExpToken.get(i+1).charAt(0))=='('){
                     ExpToken.add(0,"0");
                 }
             }
@@ -232,7 +232,7 @@ public class Calculator {
 
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
-        Calculator c = new Calculator("---(-1)");
+        Calculator c = new Calculator("-011");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
 //        System.out.println(c.ExpToken);
