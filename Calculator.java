@@ -126,7 +126,10 @@ public class Calculator {
                         j+=1;
                     }
                     num = new StringBuilder(ExpToken.get(j));
-                    num = num.insert(0,"-");
+                    if(num.toString().startsWith("-")){
+                        num = new StringBuilder(num.substring(1));
+                    }
+                    else num = num.insert(0,"-");
                     ExpToken.set(j,num.toString());
                     ExpToken.remove(i);
 //                }
@@ -253,7 +256,8 @@ public class Calculator {
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
 //        Calculator c = new Calculator("1+-(--+-((-+(-+(0xF)))))");
-        Calculator c = new Calculator("1+-(-(2))");
+//        Calculator c = new Calculator("1+-(-(2))");
+        Calculator c = new Calculator("-+(+-((-+(-+(1)))))");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
 //        System.out.println(c.ExpToken);
