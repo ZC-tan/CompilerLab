@@ -119,7 +119,7 @@ public class Calculator {
                     ExpToken.remove(i);
                 }
             }
-            else if((ExpToken.get(i).equals("-") && i != 0 && !Character.isDigit(ExpToken.get(i-1).charAt(ExpToken.get(i-1).length()-1)))  && !ExpToken.get(i-1).equals(")")&& i != ExpToken.size() - 1 && ExpToken.get(i+1).charAt(0)=='('){
+            else if((ExpToken.get(i).equals("-")  && i != 0 && !Character.isDigit(ExpToken.get(i-1).charAt(ExpToken.get(i-1).length()-1)))  && !ExpToken.get(i-1).equals(")")&& i < ExpToken.size() - 4 && ExpToken.get(i+1).charAt(0)=='('){
                 if(isOp(ExpToken.get(i-1))){
                     int j=i+1;
                     while(!isNum(ExpToken.get(j))){//find the first next num in tokens list
