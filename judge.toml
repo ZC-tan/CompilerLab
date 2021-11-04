@@ -1,6 +1,6 @@
 [jobs.lab1]
 
-image = { source = "dockerfile", path = ".", tag = "lab2" }
+image = { source = "dockerfile", path = ".", tag = "jobs.lab2" }
 
 run = [
   "export CLASSPATH='./antlr-4.9-complete.jar:$CLASSPATH'",
