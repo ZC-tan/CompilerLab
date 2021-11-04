@@ -218,12 +218,20 @@ public class Calculator {
                 num.add(x);
             }
             else{
-                String num1 = num.get(num.size()-1);
-                String num2 = num.get(num.size()-2);
-                num.remove(num.size()-1);
-                num.remove(num.size()-1);
-                String doOpRes = doOp(num2,x,num1);
-                num.add(doOpRes);
+                if(num.size()<2 && x.equals("-")){
+                    String NegNum = num.get(num.size()-1);
+                    num.remove(num.size()-1);
+                    String doOpRes = doOp("0",x,NegNum);
+                    num.add(NegNum);
+                }
+                else{
+                    String num1 = num.get(num.size()-1);
+                    String num2 = num.get(num.size()-2);
+                    num.remove(num.size()-1);
+                    num.remove(num.size()-1);
+                    String doOpRes = doOp(num2,x,num1);
+                    num.add(doOpRes);
+                }
             }
         }
         return toDec(num.get(0));
@@ -232,7 +240,7 @@ public class Calculator {
 
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
-        Calculator c = new Calculator("-011");
+        Calculator c = new Calculator("--+(+-((-+(-+(010)))))");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
 //        System.out.println(c.ExpToken);
