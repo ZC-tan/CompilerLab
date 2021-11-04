@@ -145,7 +145,7 @@ public class Calculator {
                         Sym.add(token);
                     }
                     else{
-                        while(Sym.size()!=0 && (OpACMPOpB(token,Sym.get(Sym.size()-1))=='G' || OpACMPOpB(token,Sym.get(Sym.size()-1))=='E') && !Sym.get(Sym.size()-1).equals("(")){
+                        while(Sym.size()!=0 && (OpACMPOpB(token,Sym.get(Sym.size()-1))=='L' || OpACMPOpB(token,Sym.get(Sym.size()-1))=='E') && !Sym.get(Sym.size()-1).equals("(")){
                             SuffixExp.add(Sym.get(Sym.size()-1));
                             Sym.remove(Sym.size()-1);
                         }
@@ -226,13 +226,13 @@ public class Calculator {
                 num.add(doOpRes);
             }
         }
-        return Integer.parseInt(num.get(0));
+        return toDec(num.get(0));
     }
 
 
     public static void main(String[] args) {
-//       System.out.println(toDec("-0x10"));
-        Calculator c = new Calculator("-0x10--015");
+//       System.out.println(toDec("010"));
+        Calculator c = new Calculator("+-+-010");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
 //        System.out.println(c.ExpToken);
