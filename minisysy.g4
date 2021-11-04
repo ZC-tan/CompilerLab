@@ -5,7 +5,17 @@ funcDef: funcType  ident  '('  ')'  block;//catch[RecognitionException e] { thro
 funcType: 'int';//catch[RecognitionException e] { throw e; }finally{}
 ident: 'main';//catch[RecognitionException e] { throw e; }finally{}
 block: '{'  stmt  '}';//catch[RecognitionException e] { throw e; }finally{}
-stmt: 'return' NUMBER ';';//catch[RecognitionException e] { throw e; }finally{}
+stmt: 'return' exp ';';//catch[RecognitionException e] { throw e; }finally{}
+exp: addExp;
+//addExp: mulExp | addExp ('+' | '−') mulExp;
+addExp: mulExp (('+' | '-') mulExp)*;
+//mulExp: unaryExp | mulExp ('*' | '/' | '%') unaryExp;
+mulExp: unaryExp (('*' | '/' | '%') unaryExp)*;
+//unaryExp: primaryExp | unaryOp unaryExp;
+unaryExp: primaryExp | unaryOp unaryExp;
+primaryExp: '(' exp ')' | NUMBER;
+unaryOp: '+' | '-';
+
 
 fragment HEXADECIMALPREFIX : '0x' | '0X';
 fragment NONZERODIGIT      : '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
@@ -24,6 +34,7 @@ OCTALCONST        : '0' OCTALDIGIT*;
 HEXADECIMALCONST  : HEXADECIMALPREFIX  HEXADECIMALDIGIT+;
 //HEXADECIMALPREFIX  HEXADECIMALDIGIT | HEXADECIMALCONST  HEXADECIMALDIGIT;
 WHITESPACE :[ \r\n\t] -> skip ;
+//UNARYOP :'+' | '-';
 
 COMMENT
     : '/*' .*? '*/' -> skip

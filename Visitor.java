@@ -42,27 +42,43 @@ public class Visitor extends minisysyBaseVisitor<Void>{
     @Override
     public Void visitStmt(minisysyParser.StmtContext ctx) {
         toPrint = "    ret i32 ";
-
-        String num = ctx.NUMBER().getText();
-        if(num.startsWith("0x")){
-            int hex = Integer.parseInt(num.substring(2),16);
-            toPrint += hex;
-        }
-        else if(num.startsWith("0")){
-            int oct = Integer.parseInt(num.substring(1),8);
-            toPrint += oct;
-        }
-        else{
-            toPrint += ctx.NUMBER().getText();
-        }
-
-
-
+        String exp = ctx.exp().getText();
+        int expRes = new Calculator(exp).calc();
+        toPrint += "" +expRes;
         System.out.println(toPrint);
         System.out.print("}");
         toPrint="";
+
         return super.visitStmt(ctx);
     }
 
+    @Override
+    public Void visitExp(minisysyParser.ExpContext ctx) {
+        return super.visitExp(ctx);
+    }
 
+    @Override
+    public Void visitAddExp(minisysyParser.AddExpContext ctx) {
+        return super.visitAddExp(ctx);
+    }
+
+    @Override
+    public Void visitMulExp(minisysyParser.MulExpContext ctx) {
+        return super.visitMulExp(ctx);
+    }
+
+    @Override
+    public Void visitUnaryExp(minisysyParser.UnaryExpContext ctx) {
+        return super.visitUnaryExp(ctx);
+    }
+
+    @Override
+    public Void visitPrimaryExp(minisysyParser.PrimaryExpContext ctx) {
+        return super.visitPrimaryExp(ctx);
+    }
+
+    @Override
+    public Void visitUnaryOp(minisysyParser.UnaryOpContext ctx) {
+        return super.visitUnaryOp(ctx);
+    }
 }

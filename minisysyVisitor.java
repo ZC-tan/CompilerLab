@@ -45,4 +45,40 @@ public interface minisysyVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStmt(minisysyParser.StmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#exp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExp(minisysyParser.ExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#addExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddExp(minisysyParser.AddExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#mulExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMulExp(minisysyParser.MulExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#unaryExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnaryExp(minisysyParser.UnaryExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#primaryExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrimaryExp(minisysyParser.PrimaryExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#unaryOp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnaryOp(minisysyParser.UnaryOpContext ctx);
 }
