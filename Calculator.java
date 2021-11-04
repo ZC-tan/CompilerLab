@@ -221,7 +221,7 @@ public class Calculator {
                 if(num.size()<2 && x.equals("-")){
                     String NegNum = num.get(num.size()-1);
                     num.remove(num.size()-1);
-                    String doOpRes = doOp("0",x,NegNum);
+                    NegNum = doOp("0",x,NegNum);
                     num.add(NegNum);
                 }
                 else{
@@ -240,7 +240,7 @@ public class Calculator {
 
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
-        Calculator c = new Calculator("--+(+-((-+(-+(010)))))");
+        Calculator c = new Calculator("--+(--+-((-+(-+(0xF)))))");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
 //        System.out.println(c.ExpToken);
