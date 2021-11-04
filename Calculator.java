@@ -23,7 +23,7 @@ public class Calculator {
                 hex = Integer.parseInt(num.substring(3),16);
                 dec = hex*-1;
             }
-            else if(num.startsWith("-0")){
+            else if(num.startsWith("-0") && num.length()>2){
                 oct = Integer.parseInt(num.substring(2),8);
                 dec = oct*-1;
             }
@@ -35,7 +35,7 @@ public class Calculator {
             hex = Integer.parseInt(num.substring(2),16);
             dec = hex;
         }
-        else if(num.startsWith("0")){
+        else if(num.startsWith("0")&& num.length()>2){
             oct = Integer.parseInt(num.substring(1),8);
             dec = oct;
         }
@@ -232,7 +232,7 @@ public class Calculator {
 
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
-        Calculator c = new Calculator("+-+-010");
+        Calculator c = new Calculator("---(-1)");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
 //        System.out.println(c.ExpToken);
