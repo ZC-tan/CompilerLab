@@ -119,21 +119,32 @@ public class Calculator {
                     ExpToken.remove(i);
                 }
             }
-            else if((ExpToken.get(i).equals("-")  &&  ExpToken.get(i-1).equals("(") && ExpToken.get(i+1).charAt(0)=='(')){
-//                if(isOp(ExpToken.get(i-1))){
+            else if((ExpToken.get(i).equals("-") && i != 0 && !Character.isDigit(ExpToken.get(i-1).charAt(ExpToken.get(i-1).length()-1)))  && !ExpToken.get(i-1).equals(")")&& i != ExpToken.size() - 1 && ExpToken.get(i+1).charAt(0)=='('){
+                if(isOp(ExpToken.get(i-1))){
                     int j=i+1;
-                    while(!isNum(ExpToken.get(j))){//find the first next num in tokens list
+                    while(!ExpToken.get(j).equals(")")){
                         j+=1;
                     }
-                    num = new StringBuilder(ExpToken.get(j));
-                    if(num.toString().startsWith("-")){
-                        num = new StringBuilder(num.substring(1));
-                    }
-                    else num = num.insert(0,"-");
-                    ExpToken.set(j,num.toString());
-                    ExpToken.remove(i);
-//                }
+                    ExpToken.add(i,"0");
+                    ExpToken.add(i,"(");
+                    ExpToken.add(j+1,")");
+                }
             }
+//            else if((ExpToken.get(i).equals("-")  &&  ExpToken.get(i-1).equals("(") && ExpToken.get(i+1).charAt(0)=='(')){
+////                if(isOp(ExpToken.get(i-1))){
+//                    int j=i+1;
+//                    while(!isNum(ExpToken.get(j))){//find the first next num in tokens list
+//                        j+=1;
+//                    }
+//                    num = new StringBuilder(ExpToken.get(j));
+//                    if(num.toString().startsWith("-")){
+//                        num = new StringBuilder(num.substring(1));
+//                    }
+//                    else num = num.insert(0,"-");
+//                    ExpToken.set(j,num.toString());
+//                    ExpToken.remove(i);
+////                }
+//            }
         }
     }
 
@@ -255,14 +266,14 @@ public class Calculator {
 
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
-//        Calculator c = new Calculator("1+-(--+-((-+(-+(0xF)))))");
-//        Calculator c = new Calculator("1+-(-(2))");
-        Calculator c = new Calculator("-+(+-((-+(-+(1)))))");
+//        Calculator c = new Calculator("+--+--4");
+        Calculator c = new Calculator("1/-(4-3)");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
-//        System.out.println(c.ExpToken);
-//        System.out.println(c.SuffixExp);
         System.out.println(c.calc());
+        System.out.println(c.ExpToken);
+        System.out.println(c.SuffixExp);
+        System.out.println();
     }
 
 
