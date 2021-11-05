@@ -61,7 +61,7 @@ public class Calculator {
                         negCount++;
                     }
                     if(exp.charAt(j)!='-' && exp.charAt(j)!='+'){
-                        if(negCount%2==0 && i!=0 && Character.isDigit(exp.charAt(i-1))){
+                        if(negCount%2==0 && i!=0 && (Character.isDigit(exp.charAt(i-1))||exp.charAt(i-1)==')')){
                             symbolCleared.append("+");
 //                            symbolCleared.append(exp.charAt(j));
                         }
@@ -102,17 +102,28 @@ public class Calculator {
         for(int i=0;i< ExpToken.size();i++){
             if(i==0 && ExpToken.size() > 1 && ExpToken.get(i).equals("-")){
                 if( Character.isDigit(ExpToken.get(i+1).charAt(0))){
+                    //处理形如： -a...的式子
                     num = new StringBuilder(ExpToken.get(i+1));
                     num = num.insert(0,"-");
                     ExpToken.set(i+1,num.toString());
                     ExpToken.remove(i);
                 }
                 else if((ExpToken.get(i+1).charAt(0))=='('){
-                    ExpToken.add(0,"0");
+                    //处理形如：-(...的式子
+                    //变成0-(... 不可以
+                    //要变成 (0-(...))
+                    int j=i+1;
+                    while(!ExpToken.get(j).equals(")")){
+                        j+=1;
+                    }
+                    ExpToken.add(i,"0");
+                    ExpToken.add(i,"(");
+                    ExpToken.add(j+2,")");
                 }
             }
             else if((ExpToken.get(i).equals("-") && i != 0 && !Character.isDigit(ExpToken.get(i-1).charAt(ExpToken.get(i-1).length()-1)))  && !ExpToken.get(i-1).equals(")")&& i != ExpToken.size() - 1 && Character.isDigit(ExpToken.get(i+1).charAt(0))){
                 if(isOp(ExpToken.get(i-1))){
+                    //处理形如：...*-a...的式子
                     num = new StringBuilder(ExpToken.get(i+1));
                     num = num.insert(0,"-");
                     ExpToken.set(i+1,num.toString());
@@ -121,6 +132,7 @@ public class Calculator {
             }
             else if((ExpToken.get(i).equals("-") && i != 0 && !Character.isDigit(ExpToken.get(i-1).charAt(ExpToken.get(i-1).length()-1)))  && !ExpToken.get(i-1).equals(")")&& i != ExpToken.size() - 1 && ExpToken.get(i+1).charAt(0)=='('){
                 if(isOp(ExpToken.get(i-1))){
+                    //处理形如：...*-(...的式子
                     int j=i+1;
                     while(!ExpToken.get(j).equals(")")){
                         j+=1;
@@ -260,14 +272,18 @@ public class Calculator {
                 }
             }
         }
-        return toDec(num.get(0));
+        if(num.size()==1)
+            return toDec(num.get(0));
+        else{
+            return 12345;
+        }
     }
 
 
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
 //        Calculator c = new Calculator("+--+--4");
-        Calculator c = new Calculator("-(-10)/-(4-3)");
+        Calculator c = new Calculator("-(80)+50-40");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
         System.out.println(c.calc());
