@@ -127,7 +127,7 @@ public class Calculator {
                     }
                     ExpToken.add(i,"0");
                     ExpToken.add(i,"(");
-                    ExpToken.add(j+1,")");
+                    ExpToken.add(j+2,")");
                 }
             }
 //            else if((ExpToken.get(i).equals("-")  &&  ExpToken.get(i-1).equals("(") && ExpToken.get(i+1).charAt(0)=='(')){
@@ -267,13 +267,14 @@ public class Calculator {
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
 //        Calculator c = new Calculator("+--+--4");
-        Calculator c = new Calculator("1/-(4-3)");
+        Calculator c = new Calculator("-(-10)/-(4-3)");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
         System.out.println(c.calc());
         System.out.println(c.ExpToken);
         System.out.println(c.SuffixExp);
         System.out.println();
+        //  -(-10)/-(4-3)
     }
 
 
