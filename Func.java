@@ -99,7 +99,14 @@ public class Func {
 
         String params = new String();
         for(int i=0;i<Params.size();i++){
-            params+= Type.typeToIR(f.paramType[i])+" "+Params.get(i);
+            if(Var.varsReg.containsValue(Params.get(i))){
+                String tempRet = Register.newRegister();
+                System.out.println(tempRet+" = load i32, i32* "+Params.get(i));
+                params+=Type.typeToIR(f.paramType[i])+" "+tempRet;
+            }
+            else{
+                params+= Type.typeToIR(f.paramType[i])+" "+Params.get(i);
+            }
             if(i!=Params.size()-1){
                 params+=",";
             }
