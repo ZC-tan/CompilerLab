@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Scanner in = new Scanner(System.in);
-//        File myObj = new File("filename.txt");
-//        Scanner in = new Scanner(myObj);
+//        Scanner in = new Scanner(System.in);
+        File myObj = new File("filename.txt");
+        Scanner in = new Scanner(myObj);
         String input = in.nextLine() + "\n";
         while(in.hasNextLine()){
             input+=in.nextLine();
@@ -20,14 +20,14 @@ public class Main {
 
         minisysyLexer lexer = new minisysyLexer(inputStream);
 //        MyLexer lexer = new MyLexer(inputStream);
-//        lexer.removeErrorListeners();
-//        lexer.addErrorListener(MyErrorListener.INSTANCE);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(MyErrorListener.INSTANCE);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
         minisysyParser parser = new minisysyParser(tokenStream);
 //        parser.setErrorHandler(new BailErrorStrategy());
-//        parser.removeErrorListeners();
-//        parser.addErrorListener(MyErrorListener.INSTANCE);
+        parser.removeErrorListeners();
+        parser.addErrorListener(MyErrorListener.INSTANCE);
 
         ParseTree tree = parser.compUnit();
         Visitor visitor = new Visitor();

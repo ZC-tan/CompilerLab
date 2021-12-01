@@ -87,7 +87,13 @@ public class Var {
         if(var.isConst == false){
             Expression exp = new Expression(assignExp);
             exp.toSuffix();
-            System.out.println("store i32 "+exp.expCalc()+", i32* "+var.reg);
+            String assignValue = exp.expCalc();
+            if(Var.varsReg.containsValue(assignValue)){
+                String tempRet = Register.newRegister();
+                System.out.println(tempRet+" = load i32, i32* "+assignValue);
+                System.out.println("store i32 "+tempRet+", i32* "+var.reg);
+            }
+            else System.out.println("store i32 "+exp.expCalc()+", i32* "+var.reg);
         }
         else{
             System.exit(2);
