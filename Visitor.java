@@ -87,9 +87,6 @@ public class Visitor extends minisysyBaseVisitor<Void>{
         if(ctx.initVal()!=null){
             Expression initExp = new Expression("");
             visitInitVal(ctx.initVal(),initExp);
-            System.out.println(initExp.getInfixExp());
-            System.out.println(initExp.getInfixExp());
-            System.out.println(initExp.getInfixExp());
             Var.printInitValIR(ctx.IDENT().getText(), initExp.getInfixExp());
         }
 //        System.out.println(initExp.getInfixExp());
