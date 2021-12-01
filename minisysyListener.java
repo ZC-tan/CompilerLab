@@ -17,6 +17,96 @@ public interface minisysyListener extends ParseTreeListener {
 	 */
 	void exitCompUnit(minisysyParser.CompUnitContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link minisysyParser#decl}.
+	 * @param ctx the parse tree
+	 */
+	void enterDecl(minisysyParser.DeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#decl}.
+	 * @param ctx the parse tree
+	 */
+	void exitDecl(minisysyParser.DeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#constDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstDecl(minisysyParser.ConstDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#constDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstDecl(minisysyParser.ConstDeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#bType}.
+	 * @param ctx the parse tree
+	 */
+	void enterBType(minisysyParser.BTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#bType}.
+	 * @param ctx the parse tree
+	 */
+	void exitBType(minisysyParser.BTypeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#constDef}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstDef(minisysyParser.ConstDefContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#constDef}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstDef(minisysyParser.ConstDefContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#constInitVal}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstInitVal(minisysyParser.ConstInitValContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#constInitVal}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstInitVal(minisysyParser.ConstInitValContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#constExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstExp(minisysyParser.ConstExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#constExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstExp(minisysyParser.ConstExpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#varDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarDecl(minisysyParser.VarDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#varDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarDecl(minisysyParser.VarDeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#varDef}.
+	 * @param ctx the parse tree
+	 */
+	void enterVarDef(minisysyParser.VarDefContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#varDef}.
+	 * @param ctx the parse tree
+	 */
+	void exitVarDef(minisysyParser.VarDefContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#initVal}.
+	 * @param ctx the parse tree
+	 */
+	void enterInitVal(minisysyParser.InitValContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#initVal}.
+	 * @param ctx the parse tree
+	 */
+	void exitInitVal(minisysyParser.InitValContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link minisysyParser#funcDef}.
 	 * @param ctx the parse tree
 	 */
@@ -37,16 +127,6 @@ public interface minisysyListener extends ParseTreeListener {
 	 */
 	void exitFuncType(minisysyParser.FuncTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link minisysyParser#ident}.
-	 * @param ctx the parse tree
-	 */
-	void enterIdent(minisysyParser.IdentContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link minisysyParser#ident}.
-	 * @param ctx the parse tree
-	 */
-	void exitIdent(minisysyParser.IdentContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link minisysyParser#block}.
 	 * @param ctx the parse tree
 	 */
@@ -57,6 +137,16 @@ public interface minisysyListener extends ParseTreeListener {
 	 */
 	void exitBlock(minisysyParser.BlockContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link minisysyParser#blockItem}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlockItem(minisysyParser.BlockItemContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#blockItem}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlockItem(minisysyParser.BlockItemContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link minisysyParser#stmt}.
 	 * @param ctx the parse tree
 	 */
@@ -66,6 +156,16 @@ public interface minisysyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStmt(minisysyParser.StmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#lVal}.
+	 * @param ctx the parse tree
+	 */
+	void enterLVal(minisysyParser.LValContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#lVal}.
+	 * @param ctx the parse tree
+	 */
+	void exitLVal(minisysyParser.LValContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link minisysyParser#exp}.
 	 * @param ctx the parse tree
@@ -106,6 +206,16 @@ public interface minisysyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitUnaryExp(minisysyParser.UnaryExpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#funcRParams}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncRParams(minisysyParser.FuncRParamsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#funcRParams}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncRParams(minisysyParser.FuncRParamsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link minisysyParser#primaryExp}.
 	 * @param ctx the parse tree
