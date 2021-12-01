@@ -8,6 +8,7 @@ public class Var {
     String varname;
     String vartype = new String("int");
     String reg;
+//    String block = "main";
 
     public static int tempCount=0;
 
@@ -24,6 +25,9 @@ public class Var {
     }
 
     public Var(String varname, String vartype){
+        if(getVarByVarname(varname)!=null){
+            System.exit(6);
+        }
         this.varname = varname;
         this.vartype = vartype;
         this.reg = Register.newRegister();
@@ -32,6 +36,9 @@ public class Var {
     }
 
     public Var(String varname, String vartype, boolean isConst){
+        if(getVarByVarname(varname)!=null){
+            System.exit(6);
+        }
         this.varname = varname;
         this.vartype = vartype;
         if(isConst == true)        this.isConst = true;
