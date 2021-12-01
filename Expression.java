@@ -368,11 +368,11 @@ public class Expression {
     }
 
     public static void main(String[] args) {
-        Expression testa = new Expression("(mAgIc_NuMbEr - yiersan) / 1000 - getint(c)");
+        Expression testa = new Expression("1%2");
         testa.toSuffix();
         System.out.println(testa.ExpToken);
         System.out.println(testa.SuffixExp);
-        expCalc(testa.SuffixExp);
+        System.out.println(testa.expCalc());
     }
 
     public void appendInfix(String s){

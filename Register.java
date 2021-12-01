@@ -10,7 +10,7 @@ public class Register {
     }
 
     public static boolean isReg(String x){
-        if(x.startsWith("%")) return true;
+        if(x.startsWith("%") && x.length()>1) return true;
         else return false;
     }
 
