@@ -253,7 +253,7 @@ public class Calculator {
                     break;
                 }
             }
-            else if(!Character.isDigit(x.charAt(i)) && x.charAt(i)!='x' && x.charAt(i)!='X'){
+            else if(!Character.isDigit(x.charAt(i)) && x.charAt(i)!='x' && x.charAt(i)!='X' && !(x.charAt(i)<'f' && x.charAt(i)>'a') && !(x.charAt(i)<'F' && x.charAt(i)>'A')){
                 num = false;
                 break;
             }
