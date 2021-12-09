@@ -174,12 +174,12 @@ public class Visitor extends minisysyBaseVisitor<Void>{
                 //backpatch(E.truelist,M.quad)
                 cond.backpatch(MLabel,true);
                 //true:start doing S1 and jump to end
-                IR.toPrint.add(MLabel+":");
+                IR.toPrint.add(MLabel.substring(1)+":");
                 visitStmt(ctx.stmt(0));
                 String NLabel = Register.newBlock();
                 IR.toPrint.add("br "+NLabel);
                 //false: do the rest
-                IR.toPrint.add(NLabel+":");
+                IR.toPrint.add(NLabel.substring(1)+":");
                 cond.backpatch(NLabel,false);
             }
             else{//if E then M1 S1 N else M2 S2
@@ -199,20 +199,20 @@ public class Visitor extends minisysyBaseVisitor<Void>{
                 //backpatch(E.truelist,M.quad)
                 cond.backpatch(MLabel1,true);
                 //true:start doing S1 and jump to end
-                IR.toPrint.add(MLabel1+":");
+                IR.toPrint.add(MLabel1.substring(1)+":");
                 visitStmt(ctx.stmt(0));
                 //finished (IF E then STMT) need to br(but not sure where cuz can have a lot of else's)
                 nextList.add(IR.nextQuad()+"");
                 IR.toPrint.add("br "+"@C");
                 //start else
                 String MLabel2 = Register.newBlock();
-                IR.toPrint.add(MLabel2+":");
+                IR.toPrint.add(MLabel2.substring(1)+":");
                 cond.backpatch(MLabel2,false);
                 visitStmt(ctx.stmt(1));
                 nextList.add(IR.nextQuad()+"");
                 IR.toPrint.add("br "+"@C");
                 String endLabel = Register.newBlock();
-                IR.toPrint.add(endLabel+":");
+                IR.toPrint.add(endLabel.substring(1)+":");
                 Cond.backpatch(nextList,endLabel);
             }
 
