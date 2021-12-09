@@ -177,7 +177,7 @@ public class Visitor extends minisysyBaseVisitor<Void>{
                 IR.toPrint.add(MLabel.substring(1)+":");
                 visitStmt(ctx.stmt(0));
                 String NLabel = Register.newBlock();
-                IR.toPrint.add("br "+NLabel);
+                IR.toPrint.add("br label "+NLabel);
                 //false: do the rest
                 IR.toPrint.add(NLabel.substring(1)+":");
                 cond.backpatch(NLabel,false);
@@ -203,14 +203,14 @@ public class Visitor extends minisysyBaseVisitor<Void>{
                 visitStmt(ctx.stmt(0));
                 //finished (IF E then STMT) need to br(but not sure where cuz can have a lot of else's)
                 nextList.add(IR.nextQuad()+"");
-                IR.toPrint.add("br "+"@C");
+                IR.toPrint.add("br label "+"@C");
                 //start else
                 String MLabel2 = Register.newBlock();
                 IR.toPrint.add(MLabel2.substring(1)+":");
                 cond.backpatch(MLabel2,false);
                 visitStmt(ctx.stmt(1));
                 nextList.add(IR.nextQuad()+"");
-                IR.toPrint.add("br "+"@C");
+                IR.toPrint.add("br label "+"@C");
                 String endLabel = Register.newBlock();
                 IR.toPrint.add(endLabel.substring(1)+":");
                 Cond.backpatch(nextList,endLabel);
