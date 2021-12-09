@@ -10,9 +10,9 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-//        Scanner in = new Scanner(System.in);
-        File myObj = new File("filename.txt");
-        Scanner in = new Scanner(myObj);
+        Scanner in = new Scanner(System.in);
+//        File myObj = new File("filename.txt");
+//        Scanner in = new Scanner(myObj);
         String input = in.nextLine() + "\n";
         while(in.hasNextLine()){
             input+=in.nextLine();
