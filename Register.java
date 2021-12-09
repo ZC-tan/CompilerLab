@@ -30,7 +30,7 @@ public class Register {
 
     public static String newBlock(){
         top_label_num++;
-        return "%label"+top_label_num;
+        return "%block"+top_label_num;
     }
 
     public static boolean isReg(String x){
