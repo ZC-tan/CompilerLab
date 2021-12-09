@@ -5,7 +5,7 @@ public class Register {
     private static int num = 0;
     private static int top_label_num=0;
     private int id=0;
-    private String type = "int";
+    private String type = "i32";
 
     public Register(){
         this.id=num;

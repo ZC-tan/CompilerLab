@@ -71,7 +71,7 @@ public class Expression {
             }
             else if(Cond.isStartWithRelOp(SymClearedInfixExp.substring(i,i+1))){
                 //遇到 条件表达式符号
-                if(Cond.isRelOp(SymClearedInfixExp.substring(i,i+2))){
+                if(Cond.isCondOp(SymClearedInfixExp.substring(i,i+2))){
                     //两个符号的条件运算符 >= <= == != && ||
                     ExpToken.add(SymClearedInfixExp.substring(i,i+2));
                     i+=1;
@@ -260,24 +260,34 @@ public class Expression {
                 }
                 if(!Register.isReg(operand1)) operand1 = Calculator.toDec(operand1)+"";
                 else{
-                    if(Register.getReg(operand1).getType().equals("i1")){
+                    if(Register.getReg(operand1).getType().equals("i1") && (Cond.isRelOp("x")||Calculator.isArithmeticOp(x))){
                         String tempZext = Register.newRegister();
 //                        System.out.println(tempZext+" = zext i1 "+operand1+" to i32");
                         IR.toPrint.add(tempZext+" = zext i1 "+operand1+" to i32");
                         operand1 = tempZext;
                     }
+                    if(Register.getReg(operand1).getType().equals("i32")&&(Cond.isBoolOp(x))){
+                        String tempI1 = Register.newRegister("i1");
+                        IR.toPrint.add(tempI1+" = " + "icmp ne i32 "+operand1+", "+0);
+                        operand1=tempI1;
+                    }
                 }
                 if(!Register.isReg(operand2)) operand2 = Calculator.toDec(operand2)+"";
                 else{
-                    if(Register.getReg(operand2).getType().equals("i1")){
+                    if(Register.getReg(operand2).getType().equals("i1")&& (Cond.isRelOp("x")||Calculator.isArithmeticOp(x))){
                         String tempZext = Register.newRegister();
 //                        System.out.println(tempZext+" = zext i1 "+operand2+" to i32");
                         IR.toPrint.add(tempZext+" = zext i1 "+operand2+" to i32");
                         operand2 = tempZext;
                     }
+                    if(Register.getReg(operand2).getType().equals("i32")&&(Cond.isBoolOp(x))){
+                        String tempI1 = Register.newRegister("i1");
+                        IR.toPrint.add(tempI1+" = " + "icmp ne i32 "+operand2+", "+0);
+                        operand2=tempI1;
+                    }
                 }
 
-                if(Cond.isRelOp(x)){
+                if(Cond.isCondOp(x)){
                     tempRes = Register.newRegister("i1");
                 }
                 else tempRes = Register.newRegister();

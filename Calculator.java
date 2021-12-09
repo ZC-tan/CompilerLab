@@ -236,7 +236,7 @@ public class Calculator {
 
     public static boolean isOp(String  x){
         return x.equals("+")||x.equals("-")||x.equals("*")||x.equals("/")||x.equals("(")||x.equals(")")
-                ||x.equals("%")|| Cond.isRelOp(x);
+                ||x.equals("%")|| Cond.isCondOp(x);
     }
 
     public static boolean isArithmeticOp(String x){

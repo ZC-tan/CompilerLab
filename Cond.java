@@ -12,10 +12,19 @@ public class Cond{
                 ||x.startsWith("&")||x.startsWith("|");
     }
 
-    public static boolean isRelOp(String x){
+    public static boolean isCondOp(String x){
         return x.equals("<")||x.equals(">")||x.equals(">=")||x.equals("<=")
                 ||x.equals("==")||x.equals("!=")||x.equals("!")
                 ||x.equals("&&")||x.equals("||");
+    }
+
+    public static boolean isRelOp(String x){
+        return x.equals("<")||x.equals(">")||x.equals(">=")||x.equals("<=")
+                ||x.equals("==")||x.equals("!=");
+    }
+
+    public static boolean isBoolOp(String x){
+        return x.equals("&&")||x.equals("||");
     }
 
     public void backpatch(String x,boolean trueOrFalse){
