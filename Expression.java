@@ -300,6 +300,97 @@ public class Expression {
         return operands.get(0);
     }
 
+
+    public String expCalc(boolean isCond) {
+//        System.out.println(ExpToken);
+//        System.out.println(SuffixExp);
+        //returns the number if no temp reg is used
+        //or the register of var if only a var is in exp and no temp reg is used
+        //returns the register that save the result (the top reg) if needed temp reg to calculate
+//        String res = Register.newRegister();
+        //简单常数/变量
+        this.toSuffix();
+        if(SuffixExp.size()==1){
+            String x = SuffixExp.get(0);
+            if(Var.isVar(x)){
+                return Var.getRegByVarname(x);
+            }
+            else if(Calculator.isNum(x)){
+                int num = Calculator.toDec(x);
+                return ""+num;
+            }
+        }
+        //双目
+        ArrayList<String> operands = new ArrayList<String>();
+        for (String x : SuffixExp) {
+            if(Expression.isOperand(x)){
+                operands.add(x);
+            }
+            else{
+                String operand1 = operands.get(operands.size()-1);
+                String operand2 = operands.get(operands.size()-2);
+                operands.remove(operands.size()-1);
+                operands.remove(operands.size()-1);
+                String tempRes = new String();
+                if(Var.isVar(operand1)){
+                    String tempVar = Register.newRegister();
+//                    System.out.println(tempVar+" = load i32, i32* "+Var.loadVar(operand1));
+                    IR.toPrint.add(tempVar+" = load i32, i32* "+Var.loadVar(operand1));
+                    operand1 = tempVar;
+                }
+                if(Var.isVar(operand2)){
+                    String tempVar = Register.newRegister();
+//                    System.out.println(tempVar+" = load i32, i32* "+Var.loadVar(operand2));
+                    IR.toPrint.add(tempVar+" = load i32, i32* "+Var.loadVar(operand2));
+                    operand2 = tempVar;
+                }
+                if(!Register.isReg(operand1)) operand1 = Calculator.toDec(operand1)+"";
+                else{
+                    if(Register.getReg(operand1).getType().equals("i1") && (Cond.isRelOp("x")||Calculator.isArithmeticOp(x))){
+                        String tempZext = Register.newRegister();
+//                        System.out.println(tempZext+" = zext i1 "+operand1+" to i32");
+                        IR.toPrint.add(tempZext+" = zext i1 "+operand1+" to i32");
+                        operand1 = tempZext;
+                    }
+                    if(Register.getReg(operand1).getType().equals("i32")&&(Cond.isBoolOp(x))){
+                        String tempI1 = Register.newRegister("i1");
+                        IR.toPrint.add(tempI1+" = " + "icmp ne i32 "+operand1+", "+0);
+                        operand1=tempI1;
+                    }
+                }
+                if(!Register.isReg(operand2)) operand2 = Calculator.toDec(operand2)+"";
+                else{
+                    if(Register.getReg(operand2).getType().equals("i1")&& (Cond.isRelOp("x")||Calculator.isArithmeticOp(x))){
+                        String tempZext = Register.newRegister();
+//                        System.out.println(tempZext+" = zext i1 "+operand2+" to i32");
+                        IR.toPrint.add(tempZext+" = zext i1 "+operand2+" to i32");
+                        operand2 = tempZext;
+                    }
+                    if(Register.getReg(operand2).getType().equals("i32")&&(Cond.isBoolOp(x))){
+                        String tempI1 = Register.newRegister("i1");
+                        IR.toPrint.add(tempI1+" = " + "icmp ne i32 "+operand2+", "+0);
+                        operand2=tempI1;
+                    }
+                }
+
+                if(Cond.isCondOp(x)){
+                    tempRes = Register.newRegister("i1");
+                }
+                else tempRes = Register.newRegister();
+//                System.out.println(tempRes+" = " + getOpCommand(x)+operand2+", "+operand1);
+                IR.toPrint.add(tempRes+" = " + getOpCommand(x)+operand2+", "+operand1);
+                operands.add(tempRes);
+            }
+        }
+//        return "%"+Register.getNum();
+        if(isCond && Register.getReg(operands.get(0)).getType().equals("i32")){
+            String tempI1Res = Register.newRegister("i1");
+            IR.toPrint.add(tempI1Res+" = " + "icmp ne i32 "+operands.get(0)+", "+0);
+            operands.set(0,tempI1Res);
+        }
+        return operands.get(0);
+    }
+
     public static boolean isOperand(String x){
         boolean flag=false;
         if(Calculator.isNum(x) || Var.isVar(x)){

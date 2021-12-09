@@ -164,7 +164,7 @@ public class Visitor extends minisysyBaseVisitor<Void>{
                 Cond cond = new Cond();
                 Expression condExp = new Expression("");
                 visitCond(ctx.cond(),condExp);
-                String condRes = condExp.expCalc();
+                String condRes = condExp.expCalc(true);
                 //E->true and E->false
                 cond.true_list.add(IR.nextQuad()+"");
                 cond.false_list.add(IR.nextQuad()+"");
@@ -189,7 +189,7 @@ public class Visitor extends minisysyBaseVisitor<Void>{
                 Expression condExp = new Expression("");
                 visitCond(ctx.cond(),condExp);
 
-                String condRes = condExp.expCalc();
+                String condRes = condExp.expCalc(true);
                 //E->true and E->false
                 cond.true_list.add(IR.nextQuad()+"");
                 cond.false_list.add(IR.nextQuad()+"");
