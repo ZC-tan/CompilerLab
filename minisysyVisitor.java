@@ -112,6 +112,12 @@ public interface minisysyVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExp(minisysyParser.ExpContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link minisysyParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond(minisysyParser.CondContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link minisysyParser#addExp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -147,4 +153,28 @@ public interface minisysyVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitUnaryOp(minisysyParser.UnaryOpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#relExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelExp(minisysyParser.RelExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#eqExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEqExp(minisysyParser.EqExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#lAndExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLAndExp(minisysyParser.LAndExpContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link minisysyParser#lOrExp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLOrExp(minisysyParser.LOrExpContext ctx);
 }

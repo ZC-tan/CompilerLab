@@ -10,14 +10,15 @@ constExp:addExp;
 varDecl:bType varDef (',' varDef)* ';';
 varDef:IDENT | IDENT '=' initVal;
 initVal:exp;
-funcDef: funcType  IDENT  '('  ')'  block;//catch[RecognitionException e] { throw e; }finally{}
-funcType: 'int';//catch[RecognitionException e] { throw e; }finally{}
+funcDef: funcType  IDENT  '('  ')'  block;
+funcType: 'int';
 //IDENT: NONDIGIT| IDENT NONDIGIT| IDENT DIGIT;//'main';//catch[RecognitionException e] { throw e; }finally{}
-block: '{'  (blockItem)*  '}';//catch[RecognitionException e] { throw e; }finally{}
+block: '{'  (blockItem)*  '}';
 blockItem: decl | stmt;
-stmt: lVal '=' exp ';'| (exp)? ';'|'return' exp ';';//catch[RecognitionException e] { throw e; }finally{}
+stmt: lVal '=' exp ';'| (exp)? ';'|'return' exp ';'|'if' '(' cond ')' stmt ('else' stmt )?|block;//catch[RecognitionException e] { throw e; }finally{}
 lVal:IDENT;
 exp: addExp;
+cond:lOrExp;
 //addExp: mulExp | addExp ('+' | '−') mulExp;
 addExp: mulExp (('+' | '-') mulExp)*;
 //mulExp: unaryExp | mulExp ('*' | '/' | '%') unaryExp;
@@ -26,7 +27,11 @@ mulExp: unaryExp (('*' | '/' | '%') unaryExp)*;
 unaryExp: primaryExp | unaryOp unaryExp | IDENT '(' (funcRParams)? ')';
 funcRParams: exp (',' exp)*;
 primaryExp: '(' exp ')' | NUMBER | lVal;
-unaryOp: '+' | '-';
+unaryOp: '+' | '-' | '!';
+relExp: addExp | relExp ('<' | '>' | '<=' | '>=') addExp;  // [new]
+eqExp: relExp | eqExp ('==' | '!=') relExp;  // [new]
+lAndExp: eqExp| lAndExp '&&' eqExp;  // [new]
+lOrExp: lAndExp | lOrExp '||' lAndExp;  // [new]
 
 
 fragment HEXADECIMALPREFIX : '0x' | '0X';

@@ -3,13 +3,16 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+
+
     public static void main(String[] args) throws IOException {
-        Scanner in = new Scanner(System.in);
-//        File myObj = new File("filename.txt");
-//        Scanner in = new Scanner(myObj);
+//        Scanner in = new Scanner(System.in);
+        File myObj = new File("filename.txt");
+        Scanner in = new Scanner(myObj);
         String input = in.nextLine() + "\n";
         while(in.hasNextLine()){
             input+=in.nextLine();
@@ -33,6 +36,9 @@ public class Main {
         Visitor visitor = new Visitor();
         visitor.visit(tree);
 
+        for(String Ir:IR.toPrint){
+            System.out.println(Ir);
+        }
 //        System.out.println();
 //        System.out.println(Var.varsReg);
     }

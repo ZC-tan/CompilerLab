@@ -32,7 +32,6 @@ public class Func {
         //have to see if is var or num
         //if var then load
         Expression retStat = new Expression(retExp);
-        retStat.toSuffix();
         String ret = retStat.expCalc();
         if(ret == null){
             System.exit(3);
@@ -40,11 +39,14 @@ public class Func {
 
         if(Var.varsReg.containsValue(ret)){
             String tempRet = Register.newRegister();
-            System.out.println(tempRet+" = load i32, i32* "+ret);
-            System.out.println("ret i32 "+tempRet);
+//            System.out.println(tempRet+" = load i32, i32* "+ret);
+//            System.out.println("ret i32 "+tempRet);
+            IR.toPrint.add(tempRet+" = load i32, i32* "+ret);
+            IR.toPrint.add("ret i32 "+tempRet);
         }
         else if(Calculator.isNum(ret)){
-            System.out.println("ret i32 "+ret);
+//            System.out.println("ret i32 "+ret);
+            IR.toPrint.add("ret i32 "+ret);
         }
     }
 
@@ -79,15 +81,36 @@ public class Func {
     }
 
     public static String callFunc(String funcName,ArrayList<String> Params){
+        int paramCount = Params.size();
+        if(!isValidFuncParamCount(funcName,paramCount)){
+            System.exit(5);
+        }
         Func f = getFuncByName(funcName);
+
+        String params = new String();
+        for(int i=0;i<Params.size();i++){
+            if(Var.varsReg.containsValue(Params.get(i))){
+                String tempRet = Register.newRegister();
+//                System.out.println(tempRet+" = load i32, i32* "+Params.get(i));
+                IR.toPrint.add(tempRet+" = load i32, i32* "+Params.get(i));
+                params+=Type.typeToIR(f.paramType[i])+" "+tempRet;
+            }
+            else{
+                params+= Type.typeToIR(f.paramType[i])+" "+Params.get(i);
+            }
+            if(i!=Params.size()-1){
+                params+=",";
+            }
+        }
 
         if(f.retType.equals("int")){
             String ret = Register.newRegister();
-            System.out.print(ret + " = ");
-            printCallFuncIR(funcName,Params);
+//            System.out.print(ret + " = ");
+            IR.toPrint.add(ret + " = ");
+            IR.appendLast("call "+Type.typeToIR(f.retType) + " @"+f.funcName+"("+params+")");
             return ret;
         }
-        printCallFuncIR(funcName,Params);
+        IR.toPrint.add("call "+Type.typeToIR(f.retType) + " @"+f.funcName+"("+params+")");
         return null;
     }
     public static void printCallFuncIR(String funcName,ArrayList<String> Params){
@@ -101,7 +124,8 @@ public class Func {
         for(int i=0;i<Params.size();i++){
             if(Var.varsReg.containsValue(Params.get(i))){
                 String tempRet = Register.newRegister();
-                System.out.println(tempRet+" = load i32, i32* "+Params.get(i));
+//                System.out.println(tempRet+" = load i32, i32* "+Params.get(i));
+                IR.toPrint.add(tempRet+" = load i32, i32* "+Params.get(i));
                 params+=Type.typeToIR(f.paramType[i])+" "+tempRet;
             }
             else{
@@ -111,8 +135,9 @@ public class Func {
                 params+=",";
             }
         }
-        System.out.println("call "+Type.typeToIR(f.retType) + " @"+f.funcName+"("
-                +params+")"
-        );
+//        System.out.println("call "+Type.typeToIR(f.retType) + " @"+f.funcName+"("
+//                +params+")"
+//        );
+        IR.toPrint.add("call "+Type.typeToIR(f.retType) + " @"+f.funcName+"("+params+")");
     }
 }

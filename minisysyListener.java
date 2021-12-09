@@ -177,6 +177,16 @@ public interface minisysyListener extends ParseTreeListener {
 	 */
 	void exitExp(minisysyParser.ExpContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link minisysyParser#cond}.
+	 * @param ctx the parse tree
+	 */
+	void enterCond(minisysyParser.CondContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#cond}.
+	 * @param ctx the parse tree
+	 */
+	void exitCond(minisysyParser.CondContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link minisysyParser#addExp}.
 	 * @param ctx the parse tree
 	 */
@@ -236,4 +246,44 @@ public interface minisysyListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitUnaryOp(minisysyParser.UnaryOpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#relExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterRelExp(minisysyParser.RelExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#relExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitRelExp(minisysyParser.RelExpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#eqExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterEqExp(minisysyParser.EqExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#eqExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitEqExp(minisysyParser.EqExpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#lAndExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterLAndExp(minisysyParser.LAndExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#lAndExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitLAndExp(minisysyParser.LAndExpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link minisysyParser#lOrExp}.
+	 * @param ctx the parse tree
+	 */
+	void enterLOrExp(minisysyParser.LOrExpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link minisysyParser#lOrExp}.
+	 * @param ctx the parse tree
+	 */
+	void exitLOrExp(minisysyParser.LOrExpContext ctx);
 }

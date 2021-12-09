@@ -6,7 +6,7 @@ public class Var {
     public static ArrayList<Var> vars = new ArrayList<Var>();
     boolean isConst = false;
     String varname;
-    String vartype = new String("int");
+    String vartype ="int";
     String reg;
 //    String block = "main";
 
@@ -67,7 +67,8 @@ public class Var {
         if(vartype.equals("int")){
             IRtype = "i32";
         }
-        System.out.println(this.reg + " = alloca "+IRtype);
+//        System.out.println(this.reg + " = alloca "+IRtype);
+        IR.toPrint.add(this.reg + " = alloca "+IRtype);
 //        System.out.println(Var.getRegByVarname(this.varname) + " = alloca "+IRtype);
     }
 
@@ -79,8 +80,8 @@ public class Var {
     public static void printInitValIR(String varName,String initExp){
         String reg = getRegByVarname(varName);
         Expression exp = new Expression(initExp);
-        exp.toSuffix();
-        System.out.println("store i32 "+exp.expCalc()+", i32* "+reg);
+//        System.out.println("store i32 "+exp.expCalc()+", i32* "+reg);
+        IR.toPrint.add("store i32 "+exp.expCalc()+", i32* "+reg);
     }
 
     //Assign Value(Statement, not Init)
@@ -93,14 +94,18 @@ public class Var {
         Var var = getVarByVarname(varName);
         if(var.isConst == false){
             Expression exp = new Expression(assignExp);
-            exp.toSuffix();
             String assignValue = exp.expCalc();
             if(Var.varsReg.containsValue(assignValue)){
                 String tempRet = Register.newRegister();
-                System.out.println(tempRet+" = load i32, i32* "+assignValue);
-                System.out.println("store i32 "+tempRet+", i32* "+var.reg);
+//                System.out.println(tempRet+" = load i32, i32* "+assignValue);
+//                System.out.println("store i32 "+tempRet+", i32* "+var.reg);
+                IR.toPrint.add(tempRet+" = load i32, i32* "+assignValue);
+                IR.toPrint.add("store i32 "+tempRet+", i32* "+var.reg);
             }
-            else System.out.println("store i32 "+exp.expCalc()+", i32* "+var.reg);
+            else{
+//                System.out.println("store i32 "+exp.expCalc()+", i32* "+var.reg);
+                IR.toPrint.add("store i32 "+assignValue+", i32* "+var.reg);
+            }
         }
         else{
             System.exit(2);
@@ -169,4 +174,9 @@ public class Var {
         return null;
     }
 
+    public static String loadVar(String varName){
+        String varReg = Var.getRegByVarname(varName);
+        if(varReg==null) System.exit(3);
+        return varReg;
+    }
 }

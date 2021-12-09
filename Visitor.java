@@ -104,30 +104,37 @@ public class Visitor extends minisysyBaseVisitor<Void>{
 
     @Override
     public Void visitFuncDef(minisysyParser.FuncDefContext ctx) {
-        System.out.println("declare i32 @getint()");
-        System.out.println("declare void @putint(i32)");
-        System.out.println("declare i32 @getch()");
-        System.out.println("declare void @putch(i32)");
-        System.out.print("define dso_local");
+//        System.out.println("declare i32 @getint()");
+//        System.out.println("declare void @putint(i32)");
+//        System.out.println("declare i32 @getch()");
+//        System.out.println("declare void @putch(i32)");
+//        System.out.print("define dso_local");
+        IR.toPrint.add("declare i32 @getint()");
+        IR.toPrint.add("declare void @putint(i32)");
+        IR.toPrint.add("declare i32 @getch()");
+        IR.toPrint.add("declare void @putch(i32)");
+        IR.toPrint.add("define dso_local");
         visit(ctx.funcType());
-        System.out.print("@"+ctx.IDENT().getText()+"()");
+//        System.out.println("@"+ctx.IDENT().getText()+"(){");
+        IR.appendLast("@"+ctx.IDENT().getText()+"(){");
         visit(ctx.block());
         return null;
     }
 
     @Override
     public Void visitFuncType(minisysyParser.FuncTypeContext ctx) {
-        System.out.print(" i32 ");
+        IR.appendLast(" i32 ");
+//        System.out.print(" i32 ");
         return null;
     }
 
     @Override
     public Void visitBlock(minisysyParser.BlockContext ctx) {
-        System.out.println("{");
+//        System.out.println("{");
         for(int i=0;i<ctx.blockItem().size();i++){
             visit(ctx.blockItem(i));
         }
-        System.out.println("}");
+//        System.out.println("}");
         return null;
     }
 
@@ -142,6 +149,8 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             Expression retExp = new Expression("");
             visitExp(ctx.exp(),retExp);
             Func.printMainFuncRetIR(retExp.getInfixExp());
+            IR.toPrint.add("}");
+//            System.out.println("}");
         }
         else if(ctx.lVal()!=null){
             String varName = ctx.lVal().IDENT().getText();
@@ -149,11 +158,85 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             visitExp(ctx.exp(),assignExp);
             Var.assignVar(varName,assignExp.getInfixExp());
         }
+        else if(ctx.cond()!=null){
+            if(ctx.getChildCount()==5){// if E then M S1
+                //calculate E(cond)
+                Cond cond = new Cond();
+                Expression condExp = new Expression("");
+                visitCond(ctx.cond(),condExp);
+                String condRes = condExp.expCalc();
+                //E->true and E->false
+                cond.true_list.add(IR.nextQuad()+"");
+                cond.false_list.add(IR.nextQuad()+"");
+                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
+                //meet M (Mlabel= Mquad in bilibili)
+                String MLabel = Register.newBlock();
+                //backpatch(E.truelist,M.quad)
+                cond.backpatch(MLabel,true);
+                //true:start doing S1 and jump to end
+                IR.toPrint.add(MLabel+":");
+                visitStmt(ctx.stmt(0));
+                String NLabel = Register.newBlock();
+                IR.toPrint.add("br "+NLabel);
+                //false: do the rest
+                IR.toPrint.add(NLabel+":");
+                cond.backpatch(NLabel,false);
+            }
+            else{//if E then M1 S1 N else M2 S2
+                ArrayList<String> nextList = new ArrayList<>();
+                //calculate E(cond)
+                Cond cond = new Cond();
+                Expression condExp = new Expression("");
+                visitCond(ctx.cond(),condExp);
+
+                String condRes = condExp.expCalc();
+                //E->true and E->false
+                cond.true_list.add(IR.nextQuad()+"");
+                cond.false_list.add(IR.nextQuad()+"");
+                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
+                //meet M (Mlabel= Mquad in bilibili)
+                String MLabel1 = Register.newBlock();
+                //backpatch(E.truelist,M.quad)
+                cond.backpatch(MLabel1,true);
+                //true:start doing S1 and jump to end
+                IR.toPrint.add(MLabel1+":");
+                visitStmt(ctx.stmt(0));
+                //finished (IF E then STMT) need to br(but not sure where cuz can have a lot of else's)
+                nextList.add(IR.nextQuad()+"");
+                IR.toPrint.add("br "+"@C");
+                //start else
+                String MLabel2 = Register.newBlock();
+                IR.toPrint.add(MLabel2+":");
+                cond.backpatch(MLabel2,false);
+                visitStmt(ctx.stmt(1));
+                nextList.add(IR.nextQuad()+"");
+                IR.toPrint.add("br "+"@C");
+                String endLabel = Register.newBlock();
+                IR.toPrint.add(endLabel+":");
+                Cond.backpatch(nextList,endLabel);
+            }
+
+//            String true_exit=Register.newBlock();
+//            String false_exit=Register.newBlock();
+//
+//            System.out.println(true_exit+":");
+//            visitStmt(ctx.stmt(0));
+//            if(ctx.stmt().size()>1){ //have else statement
+//                System.out.println(false_exit+":");
+//                visitStmt(ctx.stmt(1));
+//                System.out.printf("br label ");//TODO
+//            }
+//            String end_label = Register.newBlock();
+//            System.out.println("br label "+end_label);
+//            System.out.println(end_label+"");
+        }
+        else if(ctx.block()!=null){
+            visitBlock(ctx.block());
+        }
         else{
             Expression exp = new Expression("");
             visitExp(ctx.exp(),exp);
             if(exp.getInfixExp().length()>0){
-                exp.toSuffix();
                 exp.expCalc();
             }
         }
@@ -290,13 +373,10 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             ArrayList<String> params = new ArrayList<>();
             if(Func.isRecognizedFunc(funcName)){
                 if(ctx.funcRParams()!=null){
-                    //TODO visit funcRParams to get params in String[] form
                     //params should be result of EXP(a Register or a Number)
                     visitFuncRParams(ctx.funcRParams(),params);
 //                    for(String x:params) System.out.println(x);
                 }
-//                Func.callFunc(funcName,params);//TODO this return register
-                //create a tempvar for this?
 //                e.appendInfix(Var.newTempVar("int",Func.callFunc(funcName,params)).varname);
                 String ret = Func.callFunc(funcName,params);
                 if(ret != null) e.appendInfix("\\"+ret);
@@ -312,6 +392,9 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             }
             else if(ctx.unaryOp().getText().equals("-")){
                 e.appendInfix("-");
+            }
+            else if(ctx.unaryOp().getText().equals("!")){
+                e.appendInfix("!");
             }
             visitUnaryExp(ctx.unaryExp(),e);
         }
@@ -353,13 +436,93 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             Expression e =new Expression("");
             visitExp(ctx.exp(i),e);
             if(e.getInfixExp().length()>0){
-                e.toSuffix();
                 String res = e.expCalc();
                 params.add(res);
             }
         }
 
 //        return super.visitFuncRParams(ctx);
+        return null;
+    }
+
+    @Override
+    public Void visitCond(minisysyParser.CondContext ctx) {
+        return super.visitCond(ctx);
+    }
+    public Void visitCond(minisysyParser.CondContext ctx,Expression e) {
+        for(int i=0;i<ctx.getChildCount();i++){
+            visitLOrExp(ctx.lOrExp(),e);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitRelExp(minisysyParser.RelExpContext ctx) {
+        return super.visitRelExp(ctx);
+    }
+    public Void visitRelExp(minisysyParser.RelExpContext ctx,Expression e) {
+        if(ctx.getChildCount()==1){
+            visitAddExp(ctx.addExp(),e);
+        }
+        else{
+            visitRelExp(ctx.relExp(),e);
+            if(ctx.getChild(1).getText().equals("<")) e.appendInfix("<");
+            if(ctx.getChild(1).getText().equals("<=")) e.appendInfix("<=");
+            if(ctx.getChild(1).getText().equals(">")) e.appendInfix(">");
+            if(ctx.getChild(1).getText().equals(">=")) e.appendInfix(">=");
+            visitAddExp(ctx.addExp(),e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Void visitEqExp(minisysyParser.EqExpContext ctx) {
+        return super.visitEqExp(ctx);
+    }
+    public Void visitEqExp(minisysyParser.EqExpContext ctx,Expression e) {
+        if(ctx.getChildCount()==1){
+            visitRelExp(ctx.relExp(),e);
+        }
+        else{
+            visitEqExp(ctx.eqExp(),e);
+            if(ctx.getChild(1).getText().equals("==")) e.appendInfix("==");
+            if(ctx.getChild(1).getText().equals("!=")) e.appendInfix("!=");
+            visitRelExp(ctx.relExp(),e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Void visitLAndExp(minisysyParser.LAndExpContext ctx) {
+        return super.visitLAndExp(ctx);
+    }
+    public Void visitLAndExp(minisysyParser.LAndExpContext ctx,Expression e) {
+        if(ctx.getChildCount()==1){
+            visitEqExp(ctx.eqExp(),e);
+        }
+        else{
+            visitLAndExp(ctx.lAndExp(),e);
+            e.appendInfix("&&");
+            visitEqExp(ctx.eqExp(),e);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitLOrExp(minisysyParser.LOrExpContext ctx) {
+        return super.visitLOrExp(ctx);
+    }
+    public Void visitLOrExp(minisysyParser.LOrExpContext ctx,Expression e) {
+        if(ctx.getChildCount()==1){
+            visitLAndExp(ctx.lAndExp(),e);
+        }
+        else{
+            visitLOrExp(ctx.lOrExp(),e);
+            e.appendInfix("||");
+            visitLAndExp(ctx.lAndExp(),e);
+        }
         return null;
     }
 }
