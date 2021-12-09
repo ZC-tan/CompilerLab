@@ -313,7 +313,13 @@ public class Expression {
         if(SuffixExp.size()==1){
             String x = SuffixExp.get(0);
             if(Var.isVar(x)){
-                return Var.getRegByVarname(x);
+                String ret =Var.getRegByVarname(x);
+                if(isCond && Register.getReg(ret).getType().equals("i32")){
+                    String tempI1Res = Register.newRegister("i1");
+                    IR.toPrint.add(tempI1Res+" = " + "icmp ne i32 "+ret+", "+0);
+                    ret = tempI1Res;
+                }
+                return ret;
             }
             else if(Calculator.isNum(x)){
                 int num = Calculator.toDec(x);
