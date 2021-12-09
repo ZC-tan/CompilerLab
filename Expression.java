@@ -47,7 +47,7 @@ public class Expression {
                         if(notCount%2==1){
                             symbolCleared.append("!");
                         }
-                        i=j;
+                        i=j-1;
                         notCount=0;
                         break;
                     }
@@ -451,7 +451,7 @@ public class Expression {
     }
 
     public static void main(String[] args) {
-        Expression testa = new Expression("-!2");
+        Expression testa = new Expression("!--2%3");
         testa.toSuffix();
         System.out.println(testa.ExpToken);
         System.out.println(testa.SuffixExp);
