@@ -118,6 +118,7 @@ public class Visitor extends minisysyBaseVisitor<Void>{
 //        System.out.println("@"+ctx.IDENT().getText()+"(){");
         IR.appendLast("@"+ctx.IDENT().getText()+"(){");
         visit(ctx.block());
+        IR.toPrint.add("}");
         return null;
     }
 
@@ -149,7 +150,6 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             Expression retExp = new Expression("");
             visitExp(ctx.exp(),retExp);
             Func.printMainFuncRetIR(retExp.getInfixExp());
-            IR.toPrint.add("}");
 //            System.out.println("}");
         }
         else if(ctx.lVal()!=null){
