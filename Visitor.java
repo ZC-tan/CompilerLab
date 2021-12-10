@@ -159,75 +159,102 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             Var.assignVar(varName,assignExp.getInfixExp());
         }
         else if(ctx.cond()!=null){
-            if(ctx.getChildCount()==5){// if E then M S1
-                //calculate E(cond)
-                Cond cond = new Cond();
-                Expression condExp = new Expression("");
-                visitCond(ctx.cond(),condExp);
-                String condRes = condExp.expCalc(true);
-                //E->true and E->false
-                cond.true_list.add(IR.nextQuad()+"");
-                cond.false_list.add(IR.nextQuad()+"");
-                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
-                //meet M (Mlabel= Mquad in bilibili)
-                String MLabel = Register.newBlock();
-                //backpatch(E.truelist,M.quad)
-                cond.backpatch(MLabel,true);
-                //true:start doing S1 and jump to end
-                IR.toPrint.add(MLabel.substring(1)+":");
-                visitStmt(ctx.stmt(0));
-                String NLabel = Register.newBlock();
-                IR.toPrint.add("br label "+NLabel);
-                //false: do the rest
-                IR.toPrint.add(NLabel.substring(1)+":");
-                cond.backpatch(NLabel,false);
-            }
-            else{//if E then M1 S1 N else M2 S2
-                ArrayList<String> nextList = new ArrayList<>();
-                //calculate E(cond)
-                Cond cond = new Cond();
-                Expression condExp = new Expression("");
-                visitCond(ctx.cond(),condExp);
-                String condRes = condExp.expCalc(true);
-                //E->true and E->false
-                cond.true_list.add(IR.nextQuad()+"");
-                cond.false_list.add(IR.nextQuad()+"");
-                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
-                //meet M (Mlabel= Mquad in bilibili)
-                String MLabel1 = Register.newBlock();
-                //backpatch(E.truelist,M.quad)
-                cond.backpatch(MLabel1,true);
-                //true:start doing S1 and jump to end
-                IR.toPrint.add(MLabel1.substring(1)+":");
-                visitStmt(ctx.stmt(0));
-                //finished (IF E then STMT) need to br(but not sure where cuz can have a lot of else's)
-                nextList.add(IR.nextQuad()+"");
-                IR.toPrint.add("br label "+"@C");
-                //start else
-                String MLabel2 = Register.newBlock();
-                IR.toPrint.add(MLabel2.substring(1)+":");
-                cond.backpatch(MLabel2,false);
-                visitStmt(ctx.stmt(1));
-                nextList.add(IR.nextQuad()+"");
-                IR.toPrint.add("br label "+"@C");
+//            if(ctx.getChildCount()==5){// if E then M S1
+//                //calculate E(cond)
+//                Cond cond = new Cond();
+//                Expression condExp = new Expression("");
+//                visitCond(ctx.cond(),condExp);
+//                String condRes = condExp.expCalc(true);
+//                //E->true and E->false
+//                cond.true_list.add(IR.nextQuad()+"");
+//                cond.false_list.add(IR.nextQuad()+"");
+//                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
+//                //meet M (Mlabel= Mquad in bilibili)
+//                String MLabel = Register.newBlock();
+//                //backpatch(E.truelist,M.quad)
+//                cond.backpatch(MLabel,true);
+//                //true:start doing S1 and jump to end
+//                IR.toPrint.add(MLabel.substring(1)+":");
+//                visitStmt(ctx.stmt(0));
+//                String NLabel = Register.newBlock();
+//                IR.toPrint.add("br label "+NLabel);
+//                //false: do the rest
+//                IR.toPrint.add(NLabel.substring(1)+":");
+//                cond.backpatch(NLabel,false);
+//            }
+//            else{//if E then M1 S1 N else M2 S2
+//                ArrayList<String> nextList = new ArrayList<>();
+//                //calculate E(cond)
+//                Cond cond = new Cond();
+//                Expression condExp = new Expression("");
+//                visitCond(ctx.cond(),condExp);
+//                String condRes = condExp.expCalc(true);
+//                //E->true and E->false
+//                cond.true_list.add(IR.nextQuad()+"");
+//                cond.false_list.add(IR.nextQuad()+"");
+//                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
+//                //meet M (Mlabel= Mquad in bilibili)
+//                String MLabel1 = Register.newBlock();
+//                //backpatch(E.truelist,M.quad)
+//                cond.backpatch(MLabel1,true);
+//                //true:start doing S1 and jump to end
+//                IR.toPrint.add(MLabel1.substring(1)+":");
+//                visitStmt(ctx.stmt(0));
+//                //finished (IF E then STMT) need to br(but not sure where cuz can have a lot of else's)
+//                nextList.add(IR.nextQuad()+"");
+//                IR.toPrint.add("br label "+"@C");
+//                //start else
+//                String MLabel2 = Register.newBlock();
+//                IR.toPrint.add(MLabel2.substring(1)+":");
+//                cond.backpatch(MLabel2,false);
+//                visitStmt(ctx.stmt(1));
+//                nextList.add(IR.nextQuad()+"");
+//                IR.toPrint.add("br label "+"@C");
+//                String endLabel = Register.newBlock();
+//                IR.toPrint.add(endLabel.substring(1)+":");
+//                Cond.backpatch(nextList,endLabel);
+//            }
+            //calculate E(cond)
+            Cond cond = new Cond();
+            Expression condExp = new Expression("");
+            visitCond(ctx.cond(),condExp);
+            String condRes = condExp.expCalc(true);
+            //E->true and E->false
+            cond.true_list.add(IR.nextQuad()+"");
+            cond.false_list.add(IR.nextQuad()+"");
+            IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
+            //meet then(found true exit)
+            String trueExitLabel = Register.newBlock();
+            //backpatch(E.truelist,M.quad)
+            cond.backpatch(trueExitLabel,true);
+            //true exit:do S1
+            IR.toPrint.add(trueExitLabel.substring(1)+":");
+            visitStmt(ctx.stmt(0));
+
+            if(ctx.getChildCount()==5){//no else, false exit = s1's exit
                 String endLabel = Register.newBlock();
+                IR.toPrint.add("br label "+endLabel);
+                //false exit: do the rest
+                cond.backpatch(endLabel,false);
                 IR.toPrint.add(endLabel.substring(1)+":");
-                Cond.backpatch(nextList,endLabel);
+            }
+            if(ctx.getChildCount()==7){
+                ArrayList<String> chain = new ArrayList<>();
+                chain.add(IR.nextQuad()+"");
+                IR.toPrint.add("br label @C");
+                //meet else
+                String falseLabel = Register.newBlock();
+                cond.backpatch(falseLabel,false);
+                IR.toPrint.add(falseLabel.substring(1)+":");
+                visitStmt(ctx.stmt(1));
+                chain.add(IR.nextQuad()+"");
+                IR.toPrint.add("br label @C");
+                String endLabel = Register.newBlock();
+                Cond.backpatch(chain,endLabel);
+                IR.toPrint.add(endLabel.substring(1)+":");
             }
 
-//            String true_exit=Register.newBlock();
-//            String false_exit=Register.newBlock();
-//
-//            System.out.println(true_exit+":");
-//            visitStmt(ctx.stmt(0));
-//            if(ctx.stmt().size()>1){ //have else statement
-//                System.out.println(false_exit+":");
-//                visitStmt(ctx.stmt(1));
-//                System.out.printf("br label ");//TODO
-//            }
-//            String end_label = Register.newBlock();
-//            System.out.println("br label "+end_label);
-//            System.out.println(end_label+"");
+
         }
         else if(ctx.block()!=null){
             visitBlock(ctx.block());
