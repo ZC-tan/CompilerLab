@@ -410,6 +410,9 @@ public class Expression {
         else if(Register.isReg(x)){
             flag = true;
         }
+//        else if(x.startsWith("@") && x.length()>1){
+//            flag =true;
+//        }
 
         return flag;
     }
@@ -432,6 +435,26 @@ public class Expression {
         else if(Op.equals("&&")) return "and i1 ";
         else if(Op.equals("||")) return "or i1 ";
         else return "srem i32 ";
+    }
+
+    public String replaceVarWithValue(){
+        String exp = this.InfixExp;
+        String ret = new String();
+        Expression temp = new Expression(exp);
+        temp.symbolClear();
+        temp.splitExp();
+        for(int i=0;i<temp.ExpToken.size();i++){
+            String token = temp.ExpToken.get(i);
+            if(Var.isVar(token)){
+                Var var=Var.getVarByVarname(token);
+                if(!var.isConst){
+                    System.exit(11);
+                }
+                temp.ExpToken.set(i,var.globalVal+"");
+            }
+            ret+=""+temp.ExpToken.get(i);
+        }
+        return ret;
     }
 
     public void appendInfix(String s){

@@ -13,3 +13,9 @@ public class MyErrorListener extends BaseErrorListener {
         System.exit(1);
     }
 }
+
+//exit 1: syntax error
+//exit 2: change const
+//exit 3: ret null(Func.java)
+//exit 10: same varname declared in same block
+//exit 11: global init is not constant

@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Visitor extends minisysyBaseVisitor<Void>{
     String expBuilder;
@@ -23,11 +24,40 @@ public class Visitor extends minisysyBaseVisitor<Void>{
     public Void visitConstDecl(minisysyParser.ConstDeclContext ctx) {
         //每条declare语句只会定义一次 类型
         String vartype = ctx.bType().getText();
+        if(Var.curBlock()==0){
+            for(minisysyParser.ConstDefContext constant:ctx.constDef()){
+                String varname = constant.IDENT().getText();
+                if(Var.isVarExistsinBlock(varname,Var.curBlock())){
+                    System.exit(10);
+                }
+                else{
+                    Var var = new Var(varname,vartype,true,true);
+                    String initVal = new String();
+                    if(constant.constInitVal()!=null){
+                        Expression e = new Expression("");
+                        visitConstInitVal(constant.constInitVal(),e);
+                        initVal = e.replaceVarWithValue();
+                        Calculator c = new Calculator(initVal);
+                        initVal = c.calc()+"";
+                    }
+                    else{
+                        initVal="0";
+                    }
+                    var.printGlobalDeclIR(initVal);
+                }
+            }
+            return null;
+        }
         //每条declare可有声明多个变量，为每个创建const变量并存入数组，每个变量打印 alloca
         for(minisysyParser.ConstDefContext variable:ctx.constDef()){
             String varname = variable.IDENT().getText();
-            Var var = new Var(varname,vartype,true);
-            var.printVarDeclIR();
+            if(Var.isVarExistsinBlock(varname,Var.curBlock())){
+                System.exit(10);
+            }
+            else{
+                Var var = new Var(varname,vartype,true);
+                var.varDecl();
+            }
         }
 
         //visit every constDef to assign value to each IDENTs
@@ -72,10 +102,42 @@ public class Visitor extends minisysyBaseVisitor<Void>{
     @Override
     public Void visitVarDecl(minisysyParser.VarDeclContext ctx) {
         String vartype = ctx.bType().getText();
+
+        if(Var.curBlock()==0){
+            for(minisysyParser.VarDefContext variable:ctx.varDef()){
+                String varname = variable.IDENT().getText();
+                if(Var.isVarExistsinBlock(varname,Var.curBlock())){
+                    System.exit(10);
+                }
+                else{
+                    Var var = new Var(varname,vartype,false,true);
+                    String initVal = new String();//TODO
+                    if(variable.initVal()!=null){
+                        Expression e = new Expression("");
+                        visitInitVal(variable.initVal(),e);
+                        initVal = e.replaceVarWithValue();
+                        Calculator c = new Calculator(initVal);
+                        initVal = c.calc()+"";
+                    }
+                    else{
+                        initVal="0";
+                    }
+                    var.printGlobalDeclIR(initVal);
+                }
+            }
+            return null;
+        }
+
+
         for(minisysyParser.VarDefContext variable:ctx.varDef()){
             String varname = variable.IDENT().getText();
-            Var var = new Var(varname,vartype);
-            var.varDecl();
+            if(Var.isVarExistsinBlock(varname,Var.curBlock())){
+                System.exit(10);
+            }
+            else{
+                Var var = new Var(varname,vartype);
+                var.varDecl();
+            }
         }
 
         return super.visitVarDecl(ctx);
@@ -132,9 +194,14 @@ public class Visitor extends minisysyBaseVisitor<Void>{
     @Override
     public Void visitBlock(minisysyParser.BlockContext ctx) {
 //        System.out.println("{");
+        Var.newBlockId++;
+        Var.blockStack.push(Var.newBlockId);
+        Var.vars.add(new ArrayList<Var>());
+        Var.varTable.add(new HashMap<String,String>());
         for(int i=0;i<ctx.blockItem().size();i++){
             visit(ctx.blockItem(i));
         }
+        Var.blockStack.pop();
 //        System.out.println("}");
         return null;
     }
@@ -159,61 +226,6 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             Var.assignVar(varName,assignExp.getInfixExp());
         }
         else if(ctx.cond()!=null){
-//            if(ctx.getChildCount()==5){// if E then M S1
-//                //calculate E(cond)
-//                Cond cond = new Cond();
-//                Expression condExp = new Expression("");
-//                visitCond(ctx.cond(),condExp);
-//                String condRes = condExp.expCalc(true);
-//                //E->true and E->false
-//                cond.true_list.add(IR.nextQuad()+"");
-//                cond.false_list.add(IR.nextQuad()+"");
-//                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
-//                //meet M (Mlabel= Mquad in bilibili)
-//                String MLabel = Register.newBlock();
-//                //backpatch(E.truelist,M.quad)
-//                cond.backpatch(MLabel,true);
-//                //true:start doing S1 and jump to end
-//                IR.toPrint.add(MLabel.substring(1)+":");
-//                visitStmt(ctx.stmt(0));
-//                String NLabel = Register.newBlock();
-//                IR.toPrint.add("br label "+NLabel);
-//                //false: do the rest
-//                IR.toPrint.add(NLabel.substring(1)+":");
-//                cond.backpatch(NLabel,false);
-//            }
-//            else{//if E then M1 S1 N else M2 S2
-//                ArrayList<String> nextList = new ArrayList<>();
-//                //calculate E(cond)
-//                Cond cond = new Cond();
-//                Expression condExp = new Expression("");
-//                visitCond(ctx.cond(),condExp);
-//                String condRes = condExp.expCalc(true);
-//                //E->true and E->false
-//                cond.true_list.add(IR.nextQuad()+"");
-//                cond.false_list.add(IR.nextQuad()+"");
-//                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
-//                //meet M (Mlabel= Mquad in bilibili)
-//                String MLabel1 = Register.newBlock();
-//                //backpatch(E.truelist,M.quad)
-//                cond.backpatch(MLabel1,true);
-//                //true:start doing S1 and jump to end
-//                IR.toPrint.add(MLabel1.substring(1)+":");
-//                visitStmt(ctx.stmt(0));
-//                //finished (IF E then STMT) need to br(but not sure where cuz can have a lot of else's)
-//                nextList.add(IR.nextQuad()+"");
-//                IR.toPrint.add("br label "+"@C");
-//                //start else
-//                String MLabel2 = Register.newBlock();
-//                IR.toPrint.add(MLabel2.substring(1)+":");
-//                cond.backpatch(MLabel2,false);
-//                visitStmt(ctx.stmt(1));
-//                nextList.add(IR.nextQuad()+"");
-//                IR.toPrint.add("br label "+"@C");
-//                String endLabel = Register.newBlock();
-//                IR.toPrint.add(endLabel.substring(1)+":");
-//                Cond.backpatch(nextList,endLabel);
-//            }
             //calculate E(cond)
             Cond cond = new Cond();
             Expression condExp = new Expression("");
@@ -552,3 +564,61 @@ public class Visitor extends minisysyBaseVisitor<Void>{
         return null;
     }
 }
+
+
+
+//            if(ctx.getChildCount()==5){// if E then M S1
+//                //calculate E(cond)
+//                Cond cond = new Cond();
+//                Expression condExp = new Expression("");
+//                visitCond(ctx.cond(),condExp);
+//                String condRes = condExp.expCalc(true);
+//                //E->true and E->false
+//                cond.true_list.add(IR.nextQuad()+"");
+//                cond.false_list.add(IR.nextQuad()+"");
+//                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
+//                //meet M (Mlabel= Mquad in bilibili)
+//                String MLabel = Register.newBlock();
+//                //backpatch(E.truelist,M.quad)
+//                cond.backpatch(MLabel,true);
+//                //true:start doing S1 and jump to end
+//                IR.toPrint.add(MLabel.substring(1)+":");
+//                visitStmt(ctx.stmt(0));
+//                String NLabel = Register.newBlock();
+//                IR.toPrint.add("br label "+NLabel);
+//                //false: do the rest
+//                IR.toPrint.add(NLabel.substring(1)+":");
+//                cond.backpatch(NLabel,false);
+//            }
+//            else{//if E then M1 S1 N else M2 S2
+//                ArrayList<String> nextList = new ArrayList<>();
+//                //calculate E(cond)
+//                Cond cond = new Cond();
+//                Expression condExp = new Expression("");
+//                visitCond(ctx.cond(),condExp);
+//                String condRes = condExp.expCalc(true);
+//                //E->true and E->false
+//                cond.true_list.add(IR.nextQuad()+"");
+//                cond.false_list.add(IR.nextQuad()+"");
+//                IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
+//                //meet M (Mlabel= Mquad in bilibili)
+//                String MLabel1 = Register.newBlock();
+//                //backpatch(E.truelist,M.quad)
+//                cond.backpatch(MLabel1,true);
+//                //true:start doing S1 and jump to end
+//                IR.toPrint.add(MLabel1.substring(1)+":");
+//                visitStmt(ctx.stmt(0));
+//                //finished (IF E then STMT) need to br(but not sure where cuz can have a lot of else's)
+//                nextList.add(IR.nextQuad()+"");
+//                IR.toPrint.add("br label "+"@C");
+//                //start else
+//                String MLabel2 = Register.newBlock();
+//                IR.toPrint.add(MLabel2.substring(1)+":");
+//                cond.backpatch(MLabel2,false);
+//                visitStmt(ctx.stmt(1));
+//                nextList.add(IR.nextQuad()+"");
+//                IR.toPrint.add("br label "+"@C");
+//                String endLabel = Register.newBlock();
+//                IR.toPrint.add(endLabel.substring(1)+":");
+//                Cond.backpatch(nextList,endLabel);
+//            }

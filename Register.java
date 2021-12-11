@@ -30,11 +30,16 @@ public class Register {
 
     public static String newBlock(){
         top_label_num++;
-        return "%block"+top_label_num;
+        return "%label"+top_label_num;
     }
+
+//    public static String newGlobal(String ident){
+//        return "@"+ident;
+//    }
 
     public static boolean isReg(String x){
         if(x.startsWith("%") && x.length()>1) return true;
+//        else if(x.startsWith("@")&&x.length()>1) return true;
         else return false;
     }
 
@@ -61,4 +66,5 @@ public class Register {
     public String getType() {
         return type;
     }
+
 }

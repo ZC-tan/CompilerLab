@@ -313,13 +313,13 @@ public class Calculator {
     public static void main(String[] args) {
 //       System.out.println(toDec("010"));
 //        Calculator c = new Calculator("+--+--4");
-//        Calculator c = new Calculator("-(80)+50-40");
+        Calculator c = new Calculator("-(80)+50-40");
 //        c.splitExp(c.symbolClear(c.input));
 //        c.toSuffix();
-//        System.out.println(c.calc());
-//        System.out.println(c.ExpToken);
-//        System.out.println(c.SuffixExp);
-        System.out.println();
+        System.out.println(c.calc());
+        System.out.println(c.ExpToken);
+        System.out.println(c.SuffixExp);
+//        System.out.println();
         //  -(-10)/-(4-3)
     }
 

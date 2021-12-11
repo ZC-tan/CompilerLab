@@ -37,7 +37,7 @@ public class Func {
             System.exit(3);
         }
 
-        if(Var.varsReg.containsValue(ret)){
+        if(Var.existsVarRegInOutern(ret)){
             String tempRet = Register.newRegister();
 //            System.out.println(tempRet+" = load i32, i32* "+ret);
 //            System.out.println("ret i32 "+tempRet);
@@ -89,7 +89,7 @@ public class Func {
 
         String params = new String();
         for(int i=0;i<Params.size();i++){
-            if(Var.varsReg.containsValue(Params.get(i))){
+            if(Var.existsVarRegInOutern(Params.get(i))){
                 String tempRet = Register.newRegister();
 //                System.out.println(tempRet+" = load i32, i32* "+Params.get(i));
                 IR.toPrint.add(tempRet+" = load i32, i32* "+Params.get(i));
@@ -122,7 +122,7 @@ public class Func {
 
         String params = new String();
         for(int i=0;i<Params.size();i++){
-            if(Var.varsReg.containsValue(Params.get(i))){
+            if(Var.existsVarRegInOutern(Params.get(i))){
                 String tempRet = Register.newRegister();
 //                System.out.println(tempRet+" = load i32, i32* "+Params.get(i));
                 IR.toPrint.add(tempRet+" = load i32, i32* "+Params.get(i));

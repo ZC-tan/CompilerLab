@@ -1,6 +1,6 @@
 grammar minisysy;
 
-compUnit: funcDef;//catch[RecognitionException e] { throw e; }finally{}
+compUnit: decl* funcDef;//catch[RecognitionException e] { throw e; }finally{}
 decl: constDecl | varDecl;
 constDecl:'const' bType constDef (',' constDef )* ';';
 bType:'int';
