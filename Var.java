@@ -131,18 +131,15 @@ public class Var {
     public static void printInitValIR(String varName,String initExp){
         String reg = getRegByVarname(varName);
         Expression exp = new Expression(initExp);
-//        System.out.println("store i32 "+exp.expCalc()+", i32* "+reg);
         String initReg = exp.expCalc();
-//        if(getVarByVarname(varName).block==0){//if is global
-//            for(String token:exp.getSuffixExp()){
-//                if(isVar(token)){
-//                    if(!getVarByVarname(token).isConst){
-//                        System.exit(11);
-//                    }
-//                }
-//            }
-//        }
-        IR.toPrint.add("store i32 "+initReg+", i32* "+reg);
+        if(existsVarRegInOutern(initReg)){
+            String tempRet = Register.newRegister();
+            IR.toPrint.add(tempRet+" = load i32, i32* "+initReg);
+            IR.toPrint.add("store i32 "+tempRet+", i32* "+reg);
+        }
+        else{
+            IR.toPrint.add("store i32 "+initReg+", i32* "+reg);
+        }
     }
 
     //Assign Value(Statement, not Init)
