@@ -9,6 +9,9 @@ import java.util.HashMap;
 
 public class Visitor extends minisysyBaseVisitor<Void>{
     String expBuilder;
+    //save while's labels for cont and break stmt
+    static String whileStart=new String();
+    static String whileEnd=new String();
 
     @Override
     public Void visitCompUnit(minisysyParser.CompUnitContext ctx) {
@@ -213,10 +216,6 @@ public class Visitor extends minisysyBaseVisitor<Void>{
 
     @Override
     public Void visitStmt(minisysyParser.StmtContext ctx) {
-        //save while's labels for cont and break stmt
-        String whileStart=new String();
-        String whileEnd=new String();
-
         if(ctx.getText().startsWith("return")){
             Expression retExp = new Expression("");
             visitExp(ctx.exp(),retExp);
