@@ -15,7 +15,7 @@ funcType: 'int';
 //IDENT: NONDIGIT| IDENT NONDIGIT| IDENT DIGIT;//'main';//catch[RecognitionException e] { throw e; }finally{}
 block: '{'  (blockItem)*  '}';
 blockItem: decl | stmt;
-stmt: lVal '=' exp ';'| (exp)? ';'|'return' exp ';'|'if' '(' cond ')' stmt ('else' stmt )?|block;//catch[RecognitionException e] { throw e; }finally{}
+stmt: lVal '=' exp ';'| (exp)? ';'|'return' exp ';'|'if' '(' cond ')' stmt ('else' stmt )?|block|'while' '(' cond ')' stmt| 'break' ';' | 'continue' ';';//catch[RecognitionException e] { throw e; }finally{}
 lVal:IDENT;
 exp: addExp;
 cond:lOrExp;

@@ -213,6 +213,10 @@ public class Visitor extends minisysyBaseVisitor<Void>{
 
     @Override
     public Void visitStmt(minisysyParser.StmtContext ctx) {
+        //save while's labels for cont and break stmt
+        String whileStart=new String();
+        String whileEnd=new String();
+
         if(ctx.getText().startsWith("return")){
             Expression retExp = new Expression("");
             visitExp(ctx.exp(),retExp);
@@ -225,7 +229,7 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             visitExp(ctx.exp(),assignExp);
             Var.assignVar(varName,assignExp.getInfixExp());
         }
-        else if(ctx.cond()!=null){
+        else if(ctx.getText().startsWith("if")){
             //calculate E(cond)
             Cond cond = new Cond();
             Expression condExp = new Expression("");
@@ -268,8 +272,42 @@ public class Visitor extends minisysyBaseVisitor<Void>{
 
 
         }
+        else if(ctx.getText().startsWith("while")){
+            String whileCondLabel = Register.newBlock();
+            whileStart = whileCondLabel;
+            //mark while block
+            IR.toPrint.add("br label "+whileCondLabel);
+            IR.toPrint.add(whileCondLabel.substring(1)+":");
+            Expression condExp = new Expression("");
+            visitCond(ctx.cond(),condExp);
+            String condRes = condExp.expCalc(true);
+            Cond cond = new Cond();
+            //finished calc COND
+            cond.true_list.add(IR.nextQuad()+"");
+            cond.false_list.add(IR.nextQuad()+"");
+            IR.toPrint.add("br i1 "+condRes+","+"label "+"@TC" +", label "+"@FC");
+            //meet Stmt
+            //true: do while statement(backpatch true exit)
+            String doStmtLabel = Register.newBlock();
+            cond.backpatch(doStmtLabel,true);
+            IR.toPrint.add(doStmtLabel.substring(1)+":");
+            visitStmt(ctx.stmt(0));
+            IR.toPrint.add("br label "+whileCondLabel);
+            //end of while (stmt)
+            //do the rest(backpatch false eixt)
+            String endLabel = Register.newBlock();
+            whileEnd = endLabel;
+            cond.backpatch(endLabel,false);
+            IR.toPrint.add(endLabel.substring(1)+":");
+        }
         else if(ctx.block()!=null){
             visitBlock(ctx.block());
+        }
+        else if(ctx.getText().startsWith("continue")){
+            IR.toPrint.add("br label "+whileStart);
+        }
+        else if(ctx.getText().startsWith("break")){
+            IR.toPrint.add("br label "+whileEnd);
         }
         else{
             Expression exp = new Expression("");
