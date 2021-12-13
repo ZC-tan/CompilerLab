@@ -337,7 +337,7 @@ public class Visitor extends minisysyBaseVisitor<Void>{
         return super.visitExp(ctx);
     }
     public Void visitExp(minisysyParser.ExpContext ctx,Expression e) {
-        if(ctx.addExp()!=null)visitAddExp(ctx.addExp(),e);
+        if(ctx!=null)visitAddExp(ctx.addExp(),e);
         return null;
     }
 
