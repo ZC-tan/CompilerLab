@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class Visitor extends minisysyBaseVisitor<Void>{
     String expBuilder;
     //save while's labels for cont and break stmt
+    ArrayList<String> whileChain = new ArrayList<>();
     static String whileStart=new String();
     static String whileEnd=new String();
 
@@ -297,7 +298,10 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             String endLabel = Register.newBlock();
             whileEnd = endLabel;
             cond.backpatch(endLabel,false);
+            Cond.backpatch(whileChain,endLabel);
             IR.toPrint.add(endLabel.substring(1)+":");
+
+            whileChain = new ArrayList<>();
         }
         else if(ctx.block()!=null){
             visitBlock(ctx.block());
@@ -306,7 +310,8 @@ public class Visitor extends minisysyBaseVisitor<Void>{
             IR.toPrint.add("br label "+whileStart);
         }
         else if(ctx.getText().startsWith("break")){
-            IR.toPrint.add("br label "+whileEnd);
+            whileChain.add(IR.nextQuad()+"");
+            IR.toPrint.add("br label @C");
         }
         else{
             Expression exp = new Expression("");
@@ -332,7 +337,7 @@ public class Visitor extends minisysyBaseVisitor<Void>{
         return super.visitExp(ctx);
     }
     public Void visitExp(minisysyParser.ExpContext ctx,Expression e) {
-        visitAddExp(ctx.addExp(),e);
+        if(ctx.addExp()!=null)visitAddExp(ctx.addExp(),e);
         return null;
     }
 
